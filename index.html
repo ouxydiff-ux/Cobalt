@@ -161,7 +161,7 @@ function render(list) {
   container.innerHTML = "";
   list.forEach(user => {
     container.innerHTML += `
-      <div class="card" onclick="openProfile('${user.name}','${user.bio}','${user.img}')">
+      <div class="card" onclick="openProfile('${user.name}','${user.bio}','${user.img}','${user.link}')">
         <img src="${user.img}">
         <h3>${user.name}</h3>
         <p>${user.bio}</p>
@@ -172,13 +172,13 @@ function render(list) {
 
 render(data);
 
-function openProfile(name,bio,img){
+function openProfile(name,bio,img,link){
   document.getElementById("profile").style.display="flex";
   document.getElementById("p-name").innerText=name;
   document.getElementById("p-bio").innerText=bio;
   document.getElementById("p-img").src=img;
+  document.getElementById("p-link").href=link;
 }
-
 function closeProfile(){
   document.getElementById("profile").style.display="none";
 }
