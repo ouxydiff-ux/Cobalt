@@ -117,13 +117,26 @@ header {
 <div class="container" id="members"></div>
 
 <!-- Popup -->
-<div class="profile" id="profile">
-  <div class="profile-card">
-    <img id="p-img">
-    <h2 id="p-name"></h2>
-    <p id="p-bio"></p>
-    <button class="close" onclick="closeProfile()">ปิด</button>
-  </div>
+<div class="profile-card">
+  <img id="p-img">
+  <h2 id="p-name"></h2>
+  <p id="p-bio"></p>
+
+  <a id="p-link" href="#" target="_blank">
+    <button style="
+      margin-top:10px;
+      padding:8px 15px;
+      border:none;
+      border-radius:10px;
+      background:#3b82f6;
+      color:white;
+      cursor:pointer;
+    ">
+      Profile
+    </button>
+  </a>
+
+  <button class="close" onclick="closeProfile()">ปิด</button>
 </div>
 
 <script>
