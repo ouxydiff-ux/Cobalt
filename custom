@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Members</title>
+<style>
+body {
+  font-family: sans-serif;
+  background: #0f172a;
+  color: white;
+  text-align: center;
+}
+.container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 50px;
+}
+.card {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 15px;
+  width: 200px;
+  transition: 0.3s;
+}
+.card:hover {
+  transform: scale(1.05);
+}
+img {
+  width: 100px;
+  border-radius: 50%;
+}
+a {
+  text-decoration: none;
+  color: white;
+}
+button {
+  margin-top: 10px;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 10px;
+  background: #3b82f6;
+  color: white;
+  cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<h1>👥 Member List</h1>
+
+<div class="container">
+
+  <div class="card">
+    <img src="https://i.pravatar.cc/100?img=1">
+    <h3>A</h3>
+    <p>นักเรียนสายโค้ด</p>
+    <a href="user-a.html"><button>ดูโปรไฟล์</button></a>
+  </div>
+
+  <div class="card">
+    <img src="https://i.pravatar.cc/100?img=2">
+    <h3>B</h3>
+    <p>สายเกม</p>
+    <a href="user-b.html"><button>ดูโปรไฟล์</button></a>
+  </div>
+
+</div>
+
+</body>
+</html> 
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>โปรไฟล์ A</title>
+<style>
+body {
+  font-family: sans-serif;
+  background: #0f172a;
+  color: white;
+  text-align: center;
+}
+.card {
+  background: #1e293b;
+  padding: 30px;
+  border-radius: 20px;
+  width: 300px;
+  margin: 100px auto;
+}
+img {
+  width: 120px;
+  border-radius: 50%;
+}
+button {
+  margin-top: 15px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  background: #22c55e;
+  color: white;
+}
+a {
+  color: #3b82f6;
+  display: block;
+  margin-top: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <img src="https://i.pravatar.cc/150?img=1">
+  <h2>A</h2>
+  <p>ชอบเขียนเว็บ เล่นเกม และทำโปรเจกต์</p>
+  <button>Follow</button>
+  <a href="index.html">← กลับ</a>
+</div>
+
+</body>
+</html>
