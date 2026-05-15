@@ -3,192 +3,769 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Members</title>
-
+<title>COBALT — Roster</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
 <style>
-body {
-  margin: 0;
-  font-family: sans-serif;
-  background: #0f172a;
-  color: white;
-}
+  :root {
+    --black: #050608;
+    --navy-deep: #060c1a;
+    --navy: #0a1628;
+    --navy-mid: #0f2044;
+    --navy-light: #1a3460;
+    --cobalt: #1e4fd8;
+    --cobalt-bright: #2e6fff;
+    --cobalt-glow: #4d8bff;
+    --accent: #5ba3ff;
+    --dim: #8fadd6;
+    --muted: #3a5480;
+    --white: #e8f0ff;
+    --white-dim: #a0b8d8;
+  }
 
-/* Header */
-header {
-  padding: 20px;
-  text-align: center;
-  font-size: 24px;
-  font-weight: bold;
-}
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* Search */
-.search {
-  text-align: center;
-  margin-bottom: 20px;
-}
-.search input {
-  padding: 10px;
-  width: 80%;
-  max-width: 400px;
-  border-radius: 10px;
-  border: none;
-}
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
 
-/* Grid */
-.container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  padding: 20px;
-}
+  /* GRAIN OVERLAY */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.5;
+  }
 
-/* Card */
-.card {
-  background: #1e293b;
-  padding: 20px;
-  border-radius: 15px;
-  text-align: center;
-  transition: 0.3s;
-  cursor: pointer;
-}
-.card:hover {
-  transform: translateY(-5px);
-}
+  /* SCANLINE */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(10, 22, 40, 0.15) 2px,
+      rgba(10, 22, 40, 0.15) 4px
+    );
+    pointer-events: none;
+    z-index: 9998;
+  }
 
-.card img {
-  width: 80px;
-  border-radius: 50%;
-}
+  /* ─── PAGES ─── */
+  .page { display: none; animation: fadeIn 0.4s ease; }
+  .page.active { display: block; }
 
-.card h3 {
-  margin: 10px 0 5px;
-}
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 
-.card p {
-  font-size: 14px;
-  color: #cbd5f5;
-}
+  /* ─── HEADER ─── */
+  header {
+    position: relative;
+    padding: 60px 40px 40px;
+    text-align: center;
+    border-bottom: 1px solid var(--navy-light);
+    background: linear-gradient(180deg, var(--navy-deep) 0%, transparent 100%);
+    overflow: hidden;
+  }
 
-/* Profile Popup */
-.profile {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.8);
-  display: none;
-  justify-content: center;
-  align-items: center;
-}
+  header::before {
+    content: 'COBALT';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(80px, 18vw, 220px);
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(46, 111, 255, 0.07);
+    white-space: nowrap;
+    pointer-events: none;
+    letter-spacing: 0.1em;
+  }
 
-.profile-card {
-  background: #1e293b;
-  padding: 30px;
-  border-radius: 20px;
-  text-align: center;
-  width: 300px;
-}
+  .header-inner { position: relative; z-index: 1; }
 
-.profile-card img {
-  width: 100px;
-  border-radius: 50%;
-}
+  .gang-badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--cobalt-glow);
+    border: 1px solid var(--cobalt);
+    padding: 4px 14px;
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    background: rgba(30, 79, 216, 0.08);
+  }
 
-.close {
-  margin-top: 15px;
-  background: red;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 10px;
-  color: white;
-}
+  .gang-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(52px, 10vw, 110px);
+    letter-spacing: 0.12em;
+    line-height: 1;
+    background: linear-gradient(135deg, var(--white) 0%, var(--cobalt-glow) 50%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    filter: drop-shadow(0 0 40px rgba(46, 111, 255, 0.3));
+  }
+
+  .gang-tagline {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.25em;
+    margin-top: 8px;
+    text-transform: uppercase;
+  }
+
+  .member-count {
+    margin-top: 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--dim);
+    letter-spacing: 0.2em;
+  }
+
+  .member-count span {
+    color: var(--cobalt-bright);
+    font-weight: 700;
+  }
+
+  /* ─── GRID ─── */
+  .roster-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1px;
+    background: var(--navy-light);
+    border-top: 1px solid var(--navy-light);
+  }
+
+  /* ─── MEMBER CARD ─── */
+  .member-card {
+    background: var(--navy-deep);
+    padding: 32px 28px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s ease;
+  }
+
+  .member-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--cobalt), var(--cobalt-glow));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .member-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 120%, rgba(30, 79, 216, 0.12) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .member-card:hover { background: var(--navy); }
+  .member-card:hover::before { transform: scaleX(1); }
+  .member-card:hover::after { opacity: 1; }
+
+  .card-number {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.2em;
+    margin-bottom: 20px;
+  }
+
+  .card-avatar {
+    width: 64px;
+    height: 64px;
+    border-radius: 4px;
+    background: var(--navy-mid);
+    border: 2px solid var(--navy-light);
+    margin-bottom: 16px;
+    overflow: hidden;
+    position: relative;
+    transition: border-color 0.3s ease;
+  }
+
+  .member-card:hover .card-avatar { border-color: var(--cobalt); }
+
+  .card-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--cobalt-glow);
+    background: linear-gradient(135deg, var(--navy-mid), var(--navy-light));
+  }
+
+  .card-rank {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    color: var(--cobalt-glow);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .card-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.08em;
+    color: var(--white);
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .card-alias {
+    font-size: 12px;
+    color: var(--dim);
+    font-weight: 400;
+    margin-bottom: 20px;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .rank-badge {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    padding: 3px 10px;
+    border: 1px solid;
+    text-transform: uppercase;
+  }
+
+  .rank-leader   { border-color: var(--cobalt-bright); color: var(--cobalt-bright); background: rgba(46,111,255,0.1); }
+  .rank-co-leader { border-color: #7ca8ff; color: #7ca8ff; background: rgba(124,168,255,0.08); }
+  .rank-elite    { border-color: var(--accent); color: var(--accent); background: rgba(91,163,255,0.08); }
+  .rank-soldier  { border-color: var(--dim); color: var(--dim); background: rgba(143,173,214,0.06); }
+  .rank-prospect { border-color: var(--muted); color: var(--muted); background: transparent; }
+
+  .card-arrow {
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    color: var(--muted);
+    transition: color 0.2s, transform 0.2s;
+  }
+
+  .member-card:hover .card-arrow {
+    color: var(--cobalt-glow);
+    transform: translateX(4px);
+  }
+
+  /* ─── PROFILE PAGE ─── */
+  .profile-page {
+    min-height: 100vh;
+    background: var(--black);
+  }
+
+  .profile-topbar {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 24px 40px;
+    border-bottom: 1px solid var(--navy-light);
+    background: var(--navy-deep);
+  }
+
+  .back-btn {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--cobalt-glow);
+    background: none;
+    border: 1px solid var(--cobalt);
+    padding: 8px 16px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+  }
+
+  .back-btn:hover {
+    background: var(--cobalt);
+    color: var(--white);
+  }
+
+  .topbar-gang {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 0.15em;
+    color: var(--cobalt-glow);
+  }
+
+  /* PROFILE HERO */
+  .profile-hero {
+    position: relative;
+    padding: 60px 40px 50px;
+    border-bottom: 1px solid var(--navy-light);
+    overflow: hidden;
+    background: linear-gradient(135deg, var(--navy-deep) 0%, var(--navy) 60%, var(--navy-mid) 100%);
+  }
+
+  .profile-hero::before {
+    content: '';
+    position: absolute;
+    top: -60%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(30,79,216,0.18) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .profile-hero-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    max-width: 900px;
+  }
+
+  .profile-avatar {
+    flex-shrink: 0;
+    width: 120px;
+    height: 120px;
+    border: 2px solid var(--cobalt);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(30, 79, 216, 0.3);
+    background: var(--navy-mid);
+  }
+
+  .profile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .profile-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 52px;
+    color: var(--cobalt-glow);
+    background: linear-gradient(135deg, var(--navy-mid), var(--navy-light));
+  }
+
+  .profile-info { flex: 1; }
+
+  .profile-rank-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--cobalt-glow);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .profile-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 7vw, 72px);
+    letter-spacing: 0.08em;
+    line-height: 1;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+
+  .profile-alias {
+    font-size: 14px;
+    color: var(--dim);
+    margin-bottom: 20px;
+    font-weight: 400;
+  }
+
+  .profile-bio {
+    font-size: 14px;
+    color: var(--white-dim);
+    line-height: 1.7;
+    max-width: 500px;
+    border-left: 3px solid var(--cobalt);
+    padding-left: 16px;
+  }
+
+  /* FACEBOOK LINK */
+  .profile-body {
+    padding: 40px;
+    max-width: 900px;
+  }
+
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--navy-light);
+  }
+
+  .facebook-link-block {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    background: var(--navy);
+    border: 1px solid var(--navy-light);
+    padding: 18px 24px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .facebook-link-block::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: #1877f2;
+    transition: width 0.3s ease;
+  }
+
+  .facebook-link-block:hover {
+    border-color: #1877f2;
+    background: rgba(24, 119, 242, 0.08);
+  }
+
+  .facebook-link-block:hover::before { width: 100%; opacity: 0.05; }
+
+  .fb-icon {
+    width: 36px;
+    height: 36px;
+    background: #1877f2;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .fb-icon svg {
+    width: 20px;
+    height: 20px;
+    fill: white;
+  }
+
+  .fb-text { position: relative; z-index: 1; }
+
+  .fb-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .fb-name {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  .fb-url {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: #4d8bff;
+    margin-top: 2px;
+  }
+
+  .fb-arrow {
+    margin-left: 20px;
+    font-size: 20px;
+    color: var(--muted);
+    transition: color 0.2s, transform 0.2s;
+    position: relative;
+    z-index: 1;
+  }
+
+  .facebook-link-block:hover .fb-arrow {
+    color: #1877f2;
+    transform: translateX(4px);
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 600px) {
+    header { padding: 40px 20px 30px; }
+    .roster-grid { grid-template-columns: 1fr 1fr; }
+    .profile-topbar { padding: 16px 20px; }
+    .profile-hero { padding: 40px 20px 32px; }
+    .profile-hero-inner { flex-direction: column; gap: 20px; }
+    .profile-avatar { width: 90px; height: 90px; }
+    .profile-body { padding: 28px 20px; }
+  }
+
+  @media (max-width: 400px) {
+    .roster-grid { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
-
 <body>
 
-<header>Cobalt Member List</header>
+<!-- ═══════════════════════════════════════
+     PAGE 1 — ROSTER
+═══════════════════════════════════════ -->
+<div id="page-roster" class="page active">
 
-<div class="search">
-  <input type="text" id="search" placeholder="ค้นหาชื่อ...">
+  <header>
+    <div class="header-inner">
+      <div class="gang-badge">Gang Roster — 2026</div>
+      <div class="gang-name">COBALT</div>
+      <div class="gang-tagline">United in the dark. Forged in blue.</div>
+      <div class="member-count">Members: <span id="member-count-display">0</span></div>
+    </div>
+  </header>
+
+  <div class="roster-grid" id="roster-grid"></div>
+
 </div>
 
-<div class="container" id="members"></div>
+<!-- ═══════════════════════════════════════
+     PAGE 2 — PROFILE
+═══════════════════════════════════════ -->
+<div id="page-profile" class="page">
 
-<!-- Popup -->
-<div class="profile-card">
-  <img id="p-img">
-  <h2 id="p-name"></h2>
-  <p id="p-bio"></p>
+  <div class="profile-page">
 
-  <a id="p-link" href="#" target="_blank">
-    <button style="
-      margin-top:10px;
-      padding:8px 15px;
-      border:none;
-      border-radius:10px;
-      background:#3b82f6;
-      color:white;
-      cursor:pointer;
-    ">
-      Profile
-    </button>
-  </a>
+    <div class="profile-topbar">
+      <button class="back-btn" onclick="goBack()">&#8592; Roster</button>
+      <div class="topbar-gang">COBALT</div>
+    </div>
 
-  <button class="close" onclick="closeProfile()">ปิด</button>
-</div>
-
-<script>
-  const data = [
-  {
-    name:"Lurq Cobalt",
-    bio:"Founder",
-    img:"https://img2.pic.in.th/unknown.png",
-    link:"https://www.facebook.com/lurq.cobalt" // ใส่ลิงก์จริง
-  },
-  {
-    name:"Luft Cobalt",
-    bio:"Leader",
-    img:"https://img2.pic.in.th/unknown.png",
-    link:"https://www.facebook.com/luftcobalt/"
-  }
-];
-  
-const container = document.getElementById("members");
-
-function render(list) {
-  container.innerHTML = "";
-  list.forEach(user => {
-    container.innerHTML += `
-      <div class="card" onclick="openProfile('${user.name}','${user.bio}','${user.img}','${user.link}')">
-        <img src="${user.img}">
-        <h3>${user.name}</h3>
-        <p>${user.bio}</p>
+    <div class="profile-hero">
+      <div class="profile-hero-inner">
+        <div class="profile-avatar" id="prof-avatar-wrap">
+          <div class="profile-avatar-placeholder" id="prof-avatar-text"></div>
+        </div>
+        <div class="profile-info">
+          <div class="profile-rank-tag" id="prof-rank-tag"></div>
+          <div class="profile-name" id="prof-name"></div>
+          <div class="profile-alias" id="prof-alias"></div>
+          <div class="profile-bio" id="prof-bio"></div>
+        </div>
       </div>
-    `;
-  });
-}
+    </div>
 
-render(data);
+    <div class="profile-body">
+      <div class="section-label">Social — Facebook</div>
+      <a class="facebook-link-block" id="prof-fb-link" href="#" target="_blank" rel="noopener noreferrer">
+        <div class="fb-icon">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073c0 6.026 4.388 11.02 10.125 11.927v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.696 4.533-4.696 1.313 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.93-1.956 1.874v2.25h3.328l-.532 3.49h-2.796v8.437C19.612 23.093 24 18.1 24 12.073z"/>
+          </svg>
+        </div>
+        <div class="fb-text">
+          <div class="fb-label">Facebook Profile</div>
+          <div class="fb-name" id="prof-fb-name"></div>
+          <div class="fb-url" id="prof-fb-url"></div>
+        </div>
+        <div class="fb-arrow">&#8594;</div>
+      </a>
+    </div>
 
-function openProfile(name,bio,img,link){
-  document.getElementById("profile").style.display="flex";
-  document.getElementById("p-name").innerText=name;
-  document.getElementById("p-bio").innerText=bio;
-  document.getElementById("p-img").src=img;
-  document.getElementById("p-link").href=link;
-}
-function closeProfile(){
-  document.getElementById("profile").style.display="none";
-}
+  </div>
 
-document.getElementById("search").addEventListener("input", e => {
-  const value = e.target.value.toLowerCase();
-  const filtered = data.filter(u => u.name.toLowerCase().includes(value));
-  render(filtered);
-});
+</div>
+
+<!-- ─── DATA & LOGIC ─── -->
+<script>
+  const members = [
+    {
+      id: 1,
+      name: "ALEX STORM",
+      alias: '"The Architect"',
+      rank: "Leader",
+      rankClass: "rank-leader",
+      bio: "ก่อตั้งกลุ่ม Cobalt ตั้งแต่ต้น มองการณ์ไกลและไม่มีใครเดาทางได้",
+      facebook: { name: "Alex Storm", url: "https://www.facebook.com/", display: "facebook.com/alexstorm" },
+      photo: ""
+    },
+    {
+      id: 2,
+      name: "KAI VEINS",
+      alias: '"Shadow"',
+      rank: "Co-Leader",
+      rankClass: "rank-co-leader",
+      bio: "มือขวาของ The Architect ควบคุมปฏิบัติการทุกอย่างอยู่เบื้องหลัง",
+      facebook: { name: "Kai Veins", url: "https://www.facebook.com/", display: "facebook.com/kaiveins" },
+      photo: ""
+    },
+    {
+      id: 3,
+      name: "NOVA REX",
+      alias: '"Phantom"',
+      rank: "Elite",
+      rankClass: "rank-elite",
+      bio: "เชี่ยวชาญข้อมูลและการสืบราชการลับ ไม่มีใครตามทันได้",
+      facebook: { name: "Novalex R.", url: "https://www.facebook.com/", display: "facebook.com/novarex" },
+      photo: ""
+    },
+    {
+      id: 4,
+      name: "DRAKE VOID",
+      alias: '"Iron"',
+      rank: "Elite",
+      rankClass: "rank-elite",
+      bio: "กำลังหลักของทีม แข็งแกร่งและน่าเชื่อถือในทุกสถานการณ์",
+      facebook: { name: "Drake V.", url: "https://www.facebook.com/", display: "facebook.com/drakevoid" },
+      photo: ""
+    },
+    {
+      id: 5,
+      name: "MIRA FLUX",
+      alias: '"Static"',
+      rank: "Soldier",
+      rankClass: "rank-soldier",
+      bio: "เร็วและแม่นยำ ทุกภารกิจที่ได้รับมอบหมายสำเร็จเสมอ",
+      facebook: { name: "Mira Flux", url: "https://www.facebook.com/", display: "facebook.com/miraflux" },
+      photo: ""
+    },
+    {
+      id: 6,
+      name: "ZANE COAL",
+      alias: '"Blaze"',
+      rank: "Soldier",
+      rankClass: "rank-soldier",
+      bio: "กล้าหาญ บางครั้งอาจมากไปสักหน่อย แต่ไม่เคยล้มเลิก",
+      facebook: { name: "Zane Coal", url: "https://www.facebook.com/", display: "facebook.com/zanecoal" },
+      photo: ""
+    },
+    {
+      id: 7,
+      name: "REMY DUSK",
+      alias: '"Ghost"',
+      rank: "Prospect",
+      rankClass: "rank-prospect",
+      bio: "สมาชิกใหม่ที่มีแววสดใสที่สุด พิสูจน์ตัวเองทุกวัน",
+      facebook: { name: "Remy D.", url: "https://www.facebook.com/", display: "facebook.com/remydusk" },
+      photo: ""
+    },
+    {
+      id: 8,
+      name: "LEX NOIR",
+      alias: '"Zero"',
+      rank: "Prospect",
+      rankClass: "rank-prospect",
+      bio: "ลึกลับ พูดน้อย แต่เมื่อลงมือทำ ผลลัพธ์พูดแทนตัวเอง",
+      facebook: { name: "Lex Noir", url: "https://www.facebook.com/", display: "facebook.com/lexnoir" },
+      photo: ""
+    }
+  ];
+
+  // ─── BUILD ROSTER ───
+  function buildRoster() {
+    const grid = document.getElementById('roster-grid');
+    document.getElementById('member-count-display').textContent = members.length;
+
+    members.forEach((m, i) => {
+      const initials = m.name.split(' ').map(w => w[0]).join('').slice(0,2);
+      const num = String(i + 1).padStart(2, '0');
+
+      const card = document.createElement('div');
+      card.className = 'member-card';
+      card.onclick = () => openProfile(m);
+
+      card.innerHTML = `
+        <div class="card-number">${num}</div>
+        <div class="card-avatar">
+          ${m.photo
+            ? `<img src="${m.photo}" alt="${m.name}" onerror="this.parentElement.innerHTML='<div class=\\"avatar-placeholder\\">${initials}</div>'">`
+            : `<div class="avatar-placeholder">${initials}</div>`
+          }
+        </div>
+        <div class="card-rank">${m.rank}</div>
+        <div class="card-name">${m.name}</div>
+        <div class="card-alias">${m.alias}</div>
+        <div class="card-footer">
+          <span class="rank-badge ${m.rankClass}">${m.rank}</span>
+          <span class="card-arrow">&#8594;</span>
+        </div>
+      `;
+
+      grid.appendChild(card);
+    });
+  }
+
+  // ─── OPEN PROFILE ───
+  function openProfile(m) {
+    const initials = m.name.split(' ').map(w => w[0]).join('').slice(0,2);
+
+    document.getElementById('prof-rank-tag').textContent = '[ ' + m.rank + ' ]';
+    document.getElementById('prof-name').textContent = m.name;
+    document.getElementById('prof-alias').textContent = m.alias;
+    document.getElementById('prof-bio').textContent = m.bio;
+
+    // Avatar
+    const avatarWrap = document.getElementById('prof-avatar-wrap');
+    if (m.photo) {
+      avatarWrap.innerHTML = `<img src="${m.photo}" alt="${m.name}" onerror="this.parentElement.innerHTML='<div class=\\"profile-avatar-placeholder\\">${initials}</div>'">`;
+    } else {
+      avatarWrap.innerHTML = `<div class="profile-avatar-placeholder">${initials}</div>`;
+    }
+
+    // Facebook
+    document.getElementById('prof-fb-link').href = m.facebook.url;
+    document.getElementById('prof-fb-name').textContent = m.facebook.name;
+    document.getElementById('prof-fb-url').textContent = m.facebook.display;
+
+    showPage('page-profile');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ─── NAVIGATION ───
+  function showPage(id) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const target = document.getElementById(id);
+    target.classList.add('active');
+  }
+
+  function goBack() {
+    showPage('page-roster');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ─── INIT ───
+  buildRoster();
 </script>
-
 </body>
 </html>
